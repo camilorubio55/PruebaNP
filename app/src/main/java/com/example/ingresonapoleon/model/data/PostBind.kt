@@ -4,7 +4,8 @@ import androidx.annotation.Keep
 
 @Keep
 data class PostBind(
-    var id: Int = 0,
+    var idPost: Int = 0,
+    var idUser: Int = 0,
     var title: String = String(),
     var body: String = String()
 )

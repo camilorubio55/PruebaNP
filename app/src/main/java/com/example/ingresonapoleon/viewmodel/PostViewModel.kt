@@ -35,7 +35,8 @@ class PostViewModel(private val postRepository: PostRepository) {
         val values: MutableList<PostBind>  = mutableListOf()
         listPosts.map { postApi ->
             val postBind = PostBind()
-            postBind.id = postApi.id
+            postBind.idPost = postApi.id
+            postBind.idUser = postApi.userId
             postBind.title = postApi.title
             postBind.body = postApi.body
             values.add(postBind)

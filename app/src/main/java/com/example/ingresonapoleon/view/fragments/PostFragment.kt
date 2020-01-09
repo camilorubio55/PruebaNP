@@ -1,6 +1,7 @@
 package com.example.ingresonapoleon.view.fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ingresonapoleon.App
 import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
+import com.example.ingresonapoleon.view.activities.UserActivity
 import com.example.ingresonapoleon.view.adapters.ListPostAdapter
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.fragment_post.*
@@ -65,7 +67,9 @@ class PostFragment : Fragment() {
     }
 
     private fun setupListPostsAdapter() {
-        listPostAdapter = ListPostAdapter()
+        listPostAdapter = ListPostAdapter(clickPost = {idUser ->
+            launchActivityUser(idUser)
+        })
         recyclerViewPosts.run {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = listPostAdapter
@@ -74,6 +78,13 @@ class PostFragment : Fragment() {
 
     private fun getPost() {
         postViewModel.getPosts()
+    }
+
+    private fun launchActivityUser(idUser: Int) {
+        Intent(activity, UserActivity::class.java).run {
+            putExtra("idUser", idUser)
+            startActivity(this)
+        }
     }
 
     companion object{

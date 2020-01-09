@@ -8,7 +8,7 @@ import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
 import kotlinx.android.synthetic.main.post_item.view.*
 
-class ListPostAdapter : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
+class ListPostAdapter(private val clickPost: (Int) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
 
     // Data
     private var dataItems: MutableList<PostBind> = mutableListOf()
@@ -33,14 +33,18 @@ class ListPostAdapter : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val user = dataItems[position]
-        holder.bind(user)
+        val post = dataItems[position]
+        holder.bind(post)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(post: PostBind) {
             itemView.titlePost.text = post.title
             itemView.bodyPost.text = post.body
+
+            itemView.setOnClickListener {
+                clickPost(post.idUser)
+            }
         }
     }
 }
