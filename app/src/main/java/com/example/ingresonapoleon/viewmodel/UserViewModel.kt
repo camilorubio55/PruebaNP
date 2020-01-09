@@ -1,4 +1,6 @@
 package com.example.ingresonapoleon.viewmodel
 
-class UserViewModel {
+import com.example.ingresonapoleon.model.UserRepository
+
+class UserViewModel(private val userRepository: UserRepository) {
 }

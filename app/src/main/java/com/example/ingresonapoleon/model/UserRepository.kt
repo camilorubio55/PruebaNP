@@ -1,4 +1,7 @@
 package com.example.ingresonapoleon.model
 
-class UserRepository {
+import com.example.ingresonapoleon.services.Connection
+
+class UserRepository(private val connection : Connection) {
+
 }
