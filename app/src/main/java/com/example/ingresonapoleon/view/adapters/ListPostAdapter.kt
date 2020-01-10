@@ -8,13 +8,22 @@ import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
 import kotlinx.android.synthetic.main.post_item.view.*
 
-class ListPostAdapter(private val clickPost: (Int) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
+class ListPostAdapter(private val clickPost: (Int, Int) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
 
     // Data
     private var dataItems: MutableList<PostBind> = mutableListOf()
 
     fun setData(data: MutableList<PostBind>) {
         this.dataItems.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun getData(): MutableList<PostBind> {
+        return this.dataItems
+    }
+
+    fun updateRead(idPost: Int) {
+        this.dataItems.find { it.idPost == idPost }?.isRead = true
         notifyDataSetChanged()
     }
 
@@ -48,10 +57,13 @@ class ListPostAdapter(private val clickPost: (Int) -> Unit) : RecyclerView.Adapt
 
             if (!post.isRead) {
                 itemView.containerImage.visibility = View.VISIBLE
+            } else {
+                itemView.containerImage.visibility = View.INVISIBLE
+
             }
 
             itemView.setOnClickListener {
-                clickPost(post.idUser)
+                clickPost(post.idPost,post.idUser)
             }
         }
     }

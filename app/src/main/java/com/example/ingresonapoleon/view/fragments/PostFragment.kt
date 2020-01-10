@@ -63,17 +63,24 @@ class PostFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        getPost()
+        if(listPostAdapter.getData().count() == 0) {
+            getPost()
+        }
     }
 
     private fun setupListPostsAdapter() {
-        listPostAdapter = ListPostAdapter(clickPost = {idUser ->
+        listPostAdapter = ListPostAdapter(clickPost = {idPost,idUser ->
             launchActivityUser(idUser)
+            updateItemRead(idPost)
         })
         recyclerViewPosts.run {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = listPostAdapter
         }
+    }
+
+    private fun updateItemRead(idPost : Int) {
+        listPostAdapter.updateRead(idPost)
     }
 
     private fun getPost() {
