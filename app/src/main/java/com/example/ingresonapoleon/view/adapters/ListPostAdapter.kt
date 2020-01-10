@@ -27,6 +27,10 @@ class ListPostAdapter(private val clickPost: (Int) -> Unit) : RecyclerView.Adapt
         return dataItems.count()
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.post_item, parent, false)
         return ViewHolder(v)
@@ -41,6 +45,10 @@ class ListPostAdapter(private val clickPost: (Int) -> Unit) : RecyclerView.Adapt
         fun bind(post: PostBind) {
             itemView.titlePost.text = post.title
             itemView.bodyPost.text = post.body
+
+            if (!post.isRead) {
+                itemView.containerImage.visibility = View.VISIBLE
+            }
 
             itemView.setOnClickListener {
                 clickPost(post.idUser)

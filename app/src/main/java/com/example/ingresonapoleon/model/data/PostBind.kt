@@ -7,5 +7,6 @@ data class PostBind(
     var idPost: Int = 0,
     var idUser: Int = 0,
     var title: String = String(),
-    var body: String = String()
+    var body: String = String(),
+    var isRead: Boolean = true
 )

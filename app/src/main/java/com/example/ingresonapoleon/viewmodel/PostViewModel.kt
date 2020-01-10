@@ -31,14 +31,41 @@ class PostViewModel(private val postRepository: PostRepository) {
         }
     }
 
-    private fun mapListForBind(listPosts : ArrayList<Post>): MutableList<PostBind> {
+/*    @Suppress("CAST_NEVER_SUCCEEDS")
+    private fun postsWithIndicator(listPosts : MutableList<Post>): MutableList<PostBind> {
+        val values: MutableList<PostBind>  = mutableListOf()
+        mapListForBind(listPosts).map {
+            if (it.idPost < 20) {
+                values.add(PostBind(
+                    idPost = it.idPost,
+                    idUser = it.idUser,
+                    title = it.title,
+                    body = it.body,
+                    isRead = false
+                ))
+            } else {
+                values.add(it)
+            }
+        }
+        return values
+    }*/
+
+    private fun mapListForBind(listPosts : MutableList<Post>): MutableList<PostBind> {
         val values: MutableList<PostBind>  = mutableListOf()
         listPosts.map { postApi ->
             val postBind = PostBind()
-            postBind.idPost = postApi.id
-            postBind.idUser = postApi.userId
-            postBind.title = postApi.title
-            postBind.body = postApi.body
+            if (postApi.id < 20) {
+                postBind.idPost = postApi.id
+                postBind.idUser = postApi.userId
+                postBind.title = postApi.title
+                postBind.body = postApi.body
+                postBind.isRead = false
+            } else {
+                postBind.idPost = postApi.id
+                postBind.idUser = postApi.userId
+                postBind.title = postApi.title
+                postBind.body = postApi.body
+            }
             values.add(postBind)
         }
         return values
