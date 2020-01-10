@@ -8,7 +8,9 @@ import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
 import kotlinx.android.synthetic.main.post_item.view.*
 
-class ListPostAdapter(private val clickPost: (Int, Int) -> Unit, private val changePostFav:(Int, Boolean) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
+class ListPostAdapter(private val clickPost: (Int, Int) -> Unit,
+                      private val changePostFav:(Int, Boolean) -> Unit,
+                      private val deletePost: (Int) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
 
     // Data
     private var dataItems: MutableList<PostBind> = mutableListOf()
@@ -69,6 +71,11 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit, private val cha
 
             itemView.postFav.setOnCheckedChangeListener { buttonView, isChecked ->
                 changePostFav(post.idPost, isChecked)
+            }
+
+            itemView.setOnLongClickListener {
+                deletePost(post.idPost)
+                true
             }
 
             itemView.setOnClickListener {

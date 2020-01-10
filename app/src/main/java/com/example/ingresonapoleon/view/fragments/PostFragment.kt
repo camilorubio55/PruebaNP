@@ -16,6 +16,7 @@ import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
 import com.example.ingresonapoleon.view.activities.UserActivity
 import com.example.ingresonapoleon.view.adapters.ListPostAdapter
+import com.example.ingresonapoleon.view.dialogs.BottomSheetFragment
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.fragment_post.*
 
@@ -23,6 +24,9 @@ class PostFragment : Fragment() {
 
     // Adapters
     private lateinit var listPostAdapter: ListPostAdapter
+
+    // Dialogs
+    private val bottomSheetDelete: BottomSheetFragment = BottomSheetFragment()
 
     // Inject
     private val postViewModel = App.injectPostViewModel()
@@ -74,6 +78,8 @@ class PostFragment : Fragment() {
             updateItemRead(idPost)
         }, changePostFav = {idPost, isChecked ->
             updateChangeFavorite(idPost, isChecked)
+        }, deletePost = {
+            launchBottomSheetDelete()
         })
         recyclerViewPosts.run {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -91,6 +97,10 @@ class PostFragment : Fragment() {
 
     private fun getPost() {
         postViewModel.getPosts()
+    }
+
+    private fun launchBottomSheetDelete() {
+        bottomSheetDelete.show(activity!!.supportFragmentManager, BottomSheetFragment.TAG)
     }
 
     private fun launchActivityUser(idUser: Int) {
