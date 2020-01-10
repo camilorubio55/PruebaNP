@@ -8,5 +8,6 @@ data class PostBind(
     var idUser: Int = 0,
     var title: String = String(),
     var body: String = String(),
-    var isRead: Boolean = true
+    var isRead: Boolean = true,
+    var isFavorite: Boolean = false
 )

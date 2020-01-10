@@ -72,6 +72,8 @@ class PostFragment : Fragment() {
         listPostAdapter = ListPostAdapter(clickPost = {idPost,idUser ->
             launchActivityUser(idUser)
             updateItemRead(idPost)
+        }, changePostFav = {idPost, isChecked ->
+            updateChangeFavorite(idPost, isChecked)
         })
         recyclerViewPosts.run {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -81,6 +83,10 @@ class PostFragment : Fragment() {
 
     private fun updateItemRead(idPost : Int) {
         listPostAdapter.updateRead(idPost)
+    }
+
+    private fun updateChangeFavorite(idPost : Int, isChecked: Boolean) {
+        listPostAdapter.changeFavorite(idPost, isChecked)
     }
 
     private fun getPost() {

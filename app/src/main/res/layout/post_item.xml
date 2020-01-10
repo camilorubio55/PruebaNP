@@ -57,8 +57,7 @@
             android:id="@+id/containerImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,9 +68,19 @@
                 android:id="@+id/imageRead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_launcher"
                 tools:layout_editor_absoluteY="30dp" />
+
+            <CheckBox
+                android:id="@+id/postFav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:button="@drawable/check"
+                />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

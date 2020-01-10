@@ -8,7 +8,7 @@ import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
 import kotlinx.android.synthetic.main.post_item.view.*
 
-class ListPostAdapter(private val clickPost: (Int, Int) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
+class ListPostAdapter(private val clickPost: (Int, Int) -> Unit, private val changePostFav:(Int, Boolean) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
 
     // Data
     private var dataItems: MutableList<PostBind> = mutableListOf()
@@ -24,6 +24,11 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit) : RecyclerView.
 
     fun updateRead(idPost: Int) {
         this.dataItems.find { it.idPost == idPost }?.isRead = true
+        notifyDataSetChanged()
+    }
+
+    fun changeFavorite(idPost: Int, isChecked: Boolean) {
+        this.dataItems.find { it.idPost == idPost }?.isFavorite = isChecked
         notifyDataSetChanged()
     }
 
@@ -54,16 +59,20 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit) : RecyclerView.
         fun bind(post: PostBind) {
             itemView.titlePost.text = post.title
             itemView.bodyPost.text = post.body
-
+            itemView.postFav.isChecked = post.isFavorite
             if (!post.isRead) {
-                itemView.containerImage.visibility = View.VISIBLE
+                itemView.imageRead.visibility = View.VISIBLE
             } else {
-                itemView.containerImage.visibility = View.INVISIBLE
+                itemView.imageRead.visibility = View.INVISIBLE
 
             }
 
+            itemView.postFav.setOnCheckedChangeListener { buttonView, isChecked ->
+                changePostFav(post.idPost, isChecked)
+            }
+
             itemView.setOnClickListener {
-                clickPost(post.idPost,post.idUser)
+                clickPost(post.idPost, post.idUser)
             }
         }
     }
