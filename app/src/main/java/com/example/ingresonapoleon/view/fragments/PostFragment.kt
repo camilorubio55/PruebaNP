@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +19,6 @@ import com.example.ingresonapoleon.view.dialogs.BottomSheetFragment
 import com.example.ingresonapoleon.view.dialogs.LoadingDialog
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.fragment_post.*
-import kotlinx.android.synthetic.main.toolbar.*
 import androidx.appcompat.app.AppCompatActivity
 
 class PostFragment : Fragment(), Loading {
@@ -36,6 +33,7 @@ class PostFragment : Fragment(), Loading {
     // Inject
     private val postViewModel = App.injectPostViewModel()
 
+    @Suppress("UNCHECKED_CAST")
     private fun setupHandlers() {
         postViewModel.getPostInfoLiveData().observe(this, Observer { status ->
             hideLoading()
@@ -50,6 +48,34 @@ class PostFragment : Fragment(), Loading {
                 }
                 is UIState.Error -> {
                     listPostAdapter.clearData()
+                    Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+        postViewModel.deleteAllPostLiveData().observe(this, Observer {status ->
+            hideLoading()
+            when (status) {
+                is UIState.Loading -> {
+                    showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
+                }
+                is UIState.Success -> {
+                    listPostAdapter.clearData()
+                }
+                is UIState.Error -> {
+                    Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+        postViewModel.deletePostLiveData().observe(this, Observer {status ->
+            hideLoading()
+            when (status) {
+                is UIState.Loading -> {
+                    showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
+                }
+                is UIState.Success -> {
+                    postViewModel.getPosts()
+                }
+                is UIState.Error -> {
                     Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
                 }
             }
@@ -92,6 +118,10 @@ class PostFragment : Fragment(), Loading {
                 showPostsFavorites()
                 false
             }
+            R.id.refreshItem ->{
+                refreshPost()
+                false
+            }
             else -> {
                 super.onOptionsItemSelected(item)
             }
@@ -100,9 +130,7 @@ class PostFragment : Fragment(), Loading {
 
     override fun onStart() {
         super.onStart()
-        if(listPostAdapter.getData().count() == 0) {
-            getPost()
-        }
+        getPost()
     }
 
     private fun setupToolbar() {
@@ -113,10 +141,10 @@ class PostFragment : Fragment(), Loading {
         listPostAdapter = ListPostAdapter(clickPost = {idPost,idUser ->
             launchActivityUser(idUser)
             updateItemRead(idPost)
-        }, changePostFav = {idPost, isChecked ->
-            updateChangeFavorite(idPost, isChecked)
-        }, deletePost = {
-            launchBottomSheetDelete()
+        }, changePostFav = { _, _ ->
+            updateChangeFavorite()
+        }, deletePost = {idPost ->
+            launchBottomSheetDelete(idPost)
         })
         recyclerViewPosts.run {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -125,7 +153,7 @@ class PostFragment : Fragment(), Loading {
     }
 
     private fun deleteAllPosts() {
-        Toast.makeText(context,"delete all",Toast.LENGTH_SHORT).show()
+        postViewModel.deleteAllPostDB()
     }
 
     private fun showPostsFavorites() {
@@ -136,25 +164,32 @@ class PostFragment : Fragment(), Loading {
         }
     }
 
-    private fun updateItemRead(idPost : Int) {
-        listPostAdapter.updateRead(idPost)
+    private fun refreshPost() {
+        Toast.makeText(context!!,"Refresh", Toast.LENGTH_SHORT).show()
     }
 
-    private fun updateChangeFavorite(idPost : Int, isChecked: Boolean) {
-        listPostAdapter.changeFavorite(idPost, isChecked)
+    private fun updateItemRead(idPost : Int) {
+        postViewModel.readPostDB(idPost)
+    }
+
+    private fun updateChangeFavorite() {
+        Toast.makeText(context!!,"Action change favorite", Toast.LENGTH_SHORT).show()
     }
 
     private fun getPost() {
         postViewModel.getPosts()
     }
 
-    private fun launchBottomSheetDelete() {
+    private fun launchBottomSheetDelete(idPost : Int) {
+        val bundle = Bundle()
+        bundle.putInt("idPost", idPost)
+        bottomSheetDelete.arguments = bundle
         bottomSheetDelete.show(activity!!.supportFragmentManager, BottomSheetFragment.TAG)
     }
 
     private fun listenerDeletePost() {
-        bottomSheetDelete.listener = {
-            Toast.makeText(context, "delete", Toast.LENGTH_SHORT).show()
+        bottomSheetDelete.listener = {idPost ->
+            postViewModel.deletePostDB(idPost)
         }
     }
 

@@ -9,6 +9,7 @@
     <string name="title_yes">Yes</string>
     <string name="item_delete_all_posts">Delete all post</string>
     <string name="item_show_favorites">Show favorites</string>
+    <string name="item_refresh">Refresh</string>
 
     <!--Loading-->
     <string name="title_loading_dialog">Loading...</string>

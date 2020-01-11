@@ -10,4 +10,10 @@
         android:id="@+id/showFavoritesItem"
         android:title="@string/item_show_favorites"
         app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/refreshItem"
+        android:title="@string/item_refresh"
+        app:showAsAction="collapseActionView" />
+
 </menu>

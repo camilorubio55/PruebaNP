@@ -20,20 +20,6 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit,
         notifyDataSetChanged()
     }
 
-    fun getData(): MutableList<PostBind> {
-        return this.dataItems
-    }
-
-    fun updateRead(idPost: Int) {
-        this.dataItems.find { it.idPost == idPost }?.isRead = true
-        notifyDataSetChanged()
-    }
-
-    fun changeFavorite(idPost: Int, isChecked: Boolean) {
-        this.dataItems.find { it.idPost == idPost }?.isFavorite = isChecked
-        notifyDataSetChanged()
-    }
-
     fun clearData() {
         this.dataItems.clear()
         notifyDataSetChanged()
@@ -69,7 +55,7 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit,
 
             }
 
-            itemView.postFav.setOnCheckedChangeListener { buttonView, isChecked ->
+            itemView.postFav.setOnCheckedChangeListener { _, isChecked ->
                 changePostFav(post.idPost, isChecked)
             }
 

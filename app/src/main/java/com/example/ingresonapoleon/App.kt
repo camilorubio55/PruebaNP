@@ -1,8 +1,10 @@
 package com.example.ingresonapoleon
 
 import android.app.Application
+import androidx.room.Room
 import com.example.ingresonapoleon.model.PostRepository
 import com.example.ingresonapoleon.model.UserRepository
+import com.example.ingresonapoleon.model.db.AppDatabase
 import com.example.ingresonapoleon.services.Connection
 import com.example.ingresonapoleon.viewmodel.PostViewModel
 import com.example.ingresonapoleon.viewmodel.UserViewModel
@@ -19,7 +21,7 @@ class App: Application() {
         lateinit var client : OkHttpClient
 
         // BD
-        //private lateinit var appDatabase: AppDatabase
+        private lateinit var appDatabase: AppDatabase
 
         // Users
         private lateinit var userViewModel: UserViewModel
@@ -32,7 +34,7 @@ class App: Application() {
         // Injection
         fun injectUserViewModel() = userViewModel
         fun injectPostViewModel() = postViewModel
-        //fun injectUserDao() = appDatabase.userDao()
+        fun injectPostDao() = appDatabase.postDao()
     }
 
     override fun onCreate() {
@@ -50,15 +52,14 @@ class App: Application() {
         connection = Connection
 
         // BD
-        //appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
-        //appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").allowMainThreadQueries().build()
+        appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").allowMainThreadQueries().build()
 
         // Users
-        userRepository = UserRepository(connection/*, injectUserDao()*/)
+        userRepository = UserRepository(connection)
         userViewModel = UserViewModel(userRepository)
 
         // Posts
-        postRepository = PostRepository(connection)
+        postRepository = PostRepository(connection, injectPostDao())
         postViewModel = PostViewModel(postRepository)
     }
 }

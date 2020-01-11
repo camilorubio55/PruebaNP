@@ -10,7 +10,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_delete_post.*
 
 class BottomSheetFragment: BottomSheetDialogFragment() {
 
-    internal var listener: () -> Unit = {}
+    internal var listener: (Int) -> Unit = {}
+    private val idPost = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_delete_post, container, false)
@@ -26,7 +27,7 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
             dismiss()
         }
         buttonYes.setOnClickListener {
-            listener()
+            listener(arguments!!.getInt("idPost"))
             dismiss()
         }
     }
