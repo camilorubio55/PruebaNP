@@ -63,6 +63,7 @@ class PostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupListPostsAdapter()
         setupHandlers()
+        listenerDeletePost()
     }
 
     override fun onStart() {
@@ -101,6 +102,12 @@ class PostFragment : Fragment() {
 
     private fun launchBottomSheetDelete() {
         bottomSheetDelete.show(activity!!.supportFragmentManager, BottomSheetFragment.TAG)
+    }
+
+    private fun listenerDeletePost() {
+        bottomSheetDelete.listener = {
+            Toast.makeText(context, "Eliminando", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun launchActivityUser(idUser: Int) {
