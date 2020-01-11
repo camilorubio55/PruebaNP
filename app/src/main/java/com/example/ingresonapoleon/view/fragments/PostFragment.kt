@@ -13,30 +13,33 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ingresonapoleon.App
 import com.example.ingresonapoleon.R
+import com.example.ingresonapoleon.core.Loading
 import com.example.ingresonapoleon.model.data.PostBind
 import com.example.ingresonapoleon.view.activities.UserActivity
 import com.example.ingresonapoleon.view.adapters.ListPostAdapter
 import com.example.ingresonapoleon.view.dialogs.BottomSheetFragment
+import com.example.ingresonapoleon.view.dialogs.LoadingDialog
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.fragment_post.*
 
-class PostFragment : Fragment() {
+class PostFragment : Fragment(), Loading {
 
     // Adapters
     private lateinit var listPostAdapter: ListPostAdapter
 
     // Dialogs
     private val bottomSheetDelete: BottomSheetFragment = BottomSheetFragment()
+    override var loadingDialog: LoadingDialog? = null
 
     // Inject
     private val postViewModel = App.injectPostViewModel()
 
     private fun setupHandlers() {
         postViewModel.getPostInfoLiveData().observe(this, Observer { status ->
-            //hideLoading()
+            hideLoading()
             when (status) {
                 is UIState.Loading -> {
-                    //showLoading(getString(R.string.title_loading_dialog), this.supportFragmentManager)
+                    showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
                 }
                 is UIState.Success -> {
                     val data = status.data as MutableList<PostBind>

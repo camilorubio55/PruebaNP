@@ -6,23 +6,28 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.example.ingresonapoleon.App
 import com.example.ingresonapoleon.R
+import com.example.ingresonapoleon.core.Loading
 import com.example.ingresonapoleon.model.data.UserBind
+import com.example.ingresonapoleon.view.dialogs.LoadingDialog
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.activity_user.*
 
-class UserActivity : AppCompatActivity() {
+class UserActivity : AppCompatActivity(), Loading {
 
     // Inject
     private val userViewModel = App.injectUserViewModel()
 
+    // Adapters
+    override var loadingDialog: LoadingDialog? = null
+
     @Suppress("UNCHECKED_CAST")
     private fun setupHandlers() {
         userViewModel.getUserInfoLiveData().observe(this, Observer { status ->
-            //hideLoading()
+            hideLoading()
             when (status) {
-/*                is UIState.Loading -> {
+                is UIState.Loading -> {
                     showLoading(getString(R.string.title_loading_dialog), this.supportFragmentManager)
-                }*/
+                }
                 is UIState.Success -> {
                     val data: UserBind = status.data as UserBind
                     bindTextViews(data)

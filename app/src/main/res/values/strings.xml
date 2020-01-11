@@ -7,4 +7,8 @@
     <string name="message_delete_post">Are you sure you wish to delete this post?</string>
     <string name="title_cancel">Cancel</string>
     <string name="title_yes">Yes</string>
+
+    <!--Loading-->
+    <string name="title_loading_dialog">Loading...</string>
+
 </resources>

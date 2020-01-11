@@ -17,7 +17,7 @@ class PostViewModel(private val postRepository: PostRepository) {
 
     @Suppress("UNCHECKED_CAST")
     fun getPosts() {
-        //getPostInfoLiveData.value = UIState.Loading
+        getPostInfoLiveData.value = UIState.Loading
         postRepository.getPost { response ->
             when(response) {
                 is ModelResponse.OnSuccessApi -> {

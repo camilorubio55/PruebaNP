@@ -21,13 +21,9 @@ class UserViewModel(private val userRepository: UserRepository) {
         userRepository.getUsers { response ->
             when(response) {
                 is ModelResponse.OnSuccessApi -> {
-                    //userRepository.insertUsersInDB(mapListForDB(response.result as ArrayList<User>))
                     val user = filterUserForId(idUser, response.result as ArrayList<User>)
                     getUserInfoLiveData.postValue(UIState.Success(mapUserForBind(user = user)))
                 }
-/*                is ModelResponse.OnSuccessDB -> {
-                    getUserInfoLiveData.postValue(UIState.Success(mapListForBind(listUsersDB =  response.result as ArrayList<UserBD>)))
-                }*/
                 is ModelResponse.OnError -> {
                     val messageError = response.error
                     getUserInfoLiveData.postValue(UIState.Error(messageError))
