@@ -7,6 +7,8 @@
     <string name="message_delete_post">Are you sure you wish to delete this post?</string>
     <string name="title_cancel">Cancel</string>
     <string name="title_yes">Yes</string>
+    <string name="item_delete_all_posts">Delete all post</string>
+    <string name="item_show_favorites">Show favorites</string>
 
     <!--Loading-->
     <string name="title_loading_dialog">Loading...</string>

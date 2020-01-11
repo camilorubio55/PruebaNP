@@ -13,6 +13,14 @@ class MainActivity : AppCompatActivity() {
         launchFragment()
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStack()
+        } else {
+            finish()
+        }
+    }
+
     private fun launchFragment() {
         supportFragmentManager.beginTransaction().run {
             add(R.id.containerPost, PostFragment(), PostFragment.TAG)

@@ -18,5 +18,7 @@ class PostFavoritesFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_post_favorites, container, false)
     }
 
-
+    companion object{
+        const val TAG = "PostFavoritesFragment"
+    }
 }

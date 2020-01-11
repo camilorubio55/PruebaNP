@@ -3,11 +3,11 @@ package com.example.ingresonapoleon.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +21,8 @@ import com.example.ingresonapoleon.view.dialogs.BottomSheetFragment
 import com.example.ingresonapoleon.view.dialogs.LoadingDialog
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.fragment_post.*
+import kotlinx.android.synthetic.main.toolbar.*
+import androidx.appcompat.app.AppCompatActivity
 
 class PostFragment : Fragment(), Loading {
 
@@ -54,6 +56,11 @@ class PostFragment : Fragment(), Loading {
         })
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +74,28 @@ class PostFragment : Fragment(), Loading {
         setupListPostsAdapter()
         setupHandlers()
         listenerDeletePost()
+        setupToolbar()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        activity?.menuInflater?.inflate(R.menu.menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.removeItem -> {
+                deleteAllPosts()
+                false
+            }
+            R.id.showFavoritesItem -> {
+                showPostsFavorites()
+                false
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     override fun onStart() {
@@ -74,6 +103,10 @@ class PostFragment : Fragment(), Loading {
         if(listPostAdapter.getData().count() == 0) {
             getPost()
         }
+    }
+
+    private fun setupToolbar() {
+        (activity as AppCompatActivity).setSupportActionBar(toolbarPost)
     }
 
     private fun setupListPostsAdapter() {
@@ -88,6 +121,18 @@ class PostFragment : Fragment(), Loading {
         recyclerViewPosts.run {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = listPostAdapter
+        }
+    }
+
+    private fun deleteAllPosts() {
+        Toast.makeText(context,"delete all",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showPostsFavorites() {
+        fragmentManager!!.beginTransaction().run {
+            replace(R.id.containerPost, PostFavoritesFragment(), PostFavoritesFragment.TAG)
+            addToBackStack(PostFavoritesFragment.TAG)
+            commit()
         }
     }
 
@@ -109,7 +154,7 @@ class PostFragment : Fragment(), Loading {
 
     private fun listenerDeletePost() {
         bottomSheetDelete.listener = {
-            Toast.makeText(context, "Eliminando", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "delete", Toast.LENGTH_SHORT).show()
         }
     }
 

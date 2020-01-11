@@ -36,7 +36,7 @@
         android:layout_width="35dp"
         android:layout_height="31dp"
         android:layout_gravity="center"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_unread"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/postFav"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,15 +47,14 @@
 
     <CheckBox
         android:id="@+id/postFav"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center_horizontal"
         android:layout_marginBottom="8dp"
         android:button="@drawable/check"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageRead"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/imageRead" />
 
     <androidx.constraintlayout.widget.Guideline
