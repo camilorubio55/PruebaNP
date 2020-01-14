@@ -146,6 +146,7 @@ class PostFragment : Fragment(), Loading {
         setupHandlers()
         listenerDeletePost()
         setupToolbar()
+        setupListeners()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -161,10 +162,6 @@ class PostFragment : Fragment(), Loading {
             }
             R.id.showFavoritesItem -> {
                 showPostsFavorites()
-                false
-            }
-            R.id.refreshItem -> {
-                refreshPost()
                 false
             }
             else -> {
@@ -235,6 +232,12 @@ class PostFragment : Fragment(), Loading {
     private fun listenerDeletePost() {
         bottomSheetDelete.listener = {idPost ->
             postViewModel.deletePostDB(idPost)
+        }
+    }
+
+    private fun setupListeners() {
+        refreshFAB.setOnClickListener {
+            refreshPost()
         }
     }
 
