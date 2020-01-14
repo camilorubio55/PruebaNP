@@ -24,7 +24,7 @@ class UserRepository(private val connection : Connection) {
         }
     }
 
-    fun getUsers(completion: (ModelResponse) -> Unit) {
+    fun getUser(completion: (ModelResponse) -> Unit) {
         connection.send(UsersAction.GET_USERS) { response ->
             when(response) {
                 is ConnectionResponse.OnFailure -> {

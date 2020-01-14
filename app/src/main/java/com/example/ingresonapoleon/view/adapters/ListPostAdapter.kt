@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ingresonapoleon.R
 import com.example.ingresonapoleon.model.data.PostBind
-import kotlinx.android.synthetic.main.post_item.view.*
+import kotlinx.android.synthetic.main.item_post.view.*
 
-class ListPostAdapter(private val clickPost: (Int, Int) -> Unit,
+class ListPostAdapter(private val clickPost: (Int, Int, Boolean) -> Unit,
                       private val changePostFav:(Int, Boolean) -> Unit,
                       private val deletePost: (Int) -> Unit) : RecyclerView.Adapter<ListPostAdapter.ViewHolder>() {
 
@@ -34,7 +34,7 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.post_item, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
         return ViewHolder(v)
     }
 
@@ -65,7 +65,7 @@ class ListPostAdapter(private val clickPost: (Int, Int) -> Unit,
             }
 
             itemView.setOnClickListener {
-                clickPost(post.idPost, post.idUser)
+                clickPost(post.idPost, post.idUser, true)
             }
         }
     }

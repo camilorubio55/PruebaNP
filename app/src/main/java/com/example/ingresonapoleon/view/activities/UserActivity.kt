@@ -57,7 +57,7 @@ class UserActivity : AppCompatActivity(), Loading {
     }
 
     private fun getUser() {
-        userViewModel.getUsers(intent.extras.let{
+        userViewModel.getUser(intent.extras.let{
             it!!.getInt("idUser")
         })
     }

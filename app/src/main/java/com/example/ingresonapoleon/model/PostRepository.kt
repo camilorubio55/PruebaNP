@@ -14,7 +14,6 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Completable
 
-
 class PostRepository(private val connection: Connection, private val postDao: PostDao) {
 
     private val moshi = Moshi.Builder()
@@ -33,7 +32,7 @@ class PostRepository(private val connection: Connection, private val postDao: Po
             completion(ModelResponse.OnSuccessDB(getPostDB()))
         } else {
             getPostApi { response ->
-                when(response) {
+                when (response) {
                     is ModelResponse.OnSuccessApi -> {
                         completion(ModelResponse.OnSuccessApi(response.result))
                     }
@@ -45,15 +44,28 @@ class PostRepository(private val connection: Connection, private val postDao: Po
         }
     }
 
-    fun getPostDB(): List<PostDB> {
-        return postDao.getPosts()
+    private fun getPostDB(): List<PostDB> {
+        return postDao.getPostsDB()
     }
 
-    fun getPostApi(completion: (ModelResponse) -> Unit) {
+    fun getRefreshPost(completion: (ModelResponse) -> Unit) {
+        getPostApi { response ->
+            when (response) {
+                is ModelResponse.OnSuccessApi -> {
+                    completion(ModelResponse.OnSuccessApi(response.result))
+                }
+                is ModelResponse.OnError -> {
+                    completion(ModelResponse.OnError(response.error))
+                }
+            }
+        }
+    }
+
+    private fun getPostApi(completion: (ModelResponse) -> Unit) {
         connection.send(PostsAction.GET_POSTS) { response ->
-            when(response) {
+            when (response) {
                 is ConnectionResponse.OnFailure -> {
-                    val error =  Constants.ERROR_CONNECTION
+                    val error = Constants.ERROR_CONNECTION
                     completion(ModelResponse.OnError(error))
                 }
                 is ConnectionResponse.OnSuccess -> {
@@ -66,19 +78,24 @@ class PostRepository(private val connection: Connection, private val postDao: Po
         }
     }
 
-    fun insertPostInDB(listPosts : List<PostDB>) {
-        postDao.insertAll(listPosts)
+    fun insertPostInDB(listPosts: List<PostDB>) {
+        postDao.insertAllDB(listPosts)
     }
 
-    fun deleteAllPostDB() : Completable {
-       return postDao.deleteAllPost()
+    fun deleteAllPostDB(): Completable {
+        return postDao.deleteAllPostDB()
     }
 
-    fun deletePostDB(idPost: Int) : Completable {
-        return postDao.deletePost(idPost)
+    fun deletePostDB(idPost: Int): Completable {
+        return postDao.deletePostDB(idPost)
     }
 
-    fun readPostDB(idPost: Int) {
-        postDao.readPostDB(idPost)
+    fun readPostDB(idPost: Int, isRead: Int): Completable {
+        return postDao.readPostDB(idPost, isRead)
     }
+
+    fun isFavoritePostDB(idPost: Int, isFavorite: Int): Completable {
+        return postDao.isFavoritePostDB(idPost, isFavorite)
+    }
+
 }

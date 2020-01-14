@@ -16,9 +16,9 @@ class UserViewModel(private val userRepository: UserRepository) {
     fun getUserInfoLiveData(): LiveData<UIState> = getUserInfoLiveData
 
     @Suppress("UNCHECKED_CAST")
-    fun getUsers(idUser : Int) {
+    fun getUser(idUser : Int) {
         getUserInfoLiveData.value = UIState.Loading
-        userRepository.getUsers { response ->
+        userRepository.getUser { response ->
             when(response) {
                 is ModelResponse.OnSuccessApi -> {
                     val user = filterUserForId(idUser, response.result as ArrayList<User>)
@@ -33,7 +33,7 @@ class UserViewModel(private val userRepository: UserRepository) {
     }
 
     private fun filterUserForId(idUser: Int, listUsers: ArrayList<User>): User{
-       return listUsers.find{ it.id == idUser }!!
+        return listUsers.find{ it.id == idUser }!!
     }
 
     private fun mapUserForBind(user : User): UserBind {
@@ -43,5 +43,4 @@ class UserViewModel(private val userRepository: UserRepository) {
             phone = user.phone
         )
     }
-
 }

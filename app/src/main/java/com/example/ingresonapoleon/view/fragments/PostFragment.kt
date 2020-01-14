@@ -1,8 +1,8 @@
 package com.example.ingresonapoleon.view.fragments
 
-
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -15,7 +15,7 @@ import com.example.ingresonapoleon.core.Loading
 import com.example.ingresonapoleon.model.data.PostBind
 import com.example.ingresonapoleon.view.activities.UserActivity
 import com.example.ingresonapoleon.view.adapters.ListPostAdapter
-import com.example.ingresonapoleon.view.dialogs.BottomSheetFragment
+import com.example.ingresonapoleon.view.dialogs.BottomSheetDialog
 import com.example.ingresonapoleon.view.dialogs.LoadingDialog
 import com.example.ingresonapoleon.viewmodel.UIState
 import kotlinx.android.synthetic.main.fragment_post.*
@@ -27,7 +27,7 @@ class PostFragment : Fragment(), Loading {
     private lateinit var listPostAdapter: ListPostAdapter
 
     // Dialogs
-    private val bottomSheetDelete: BottomSheetFragment = BottomSheetFragment()
+    private val bottomSheetDelete: BottomSheetDialog = BottomSheetDialog()
     override var loadingDialog: LoadingDialog? = null
 
     // Inject
@@ -48,6 +48,51 @@ class PostFragment : Fragment(), Loading {
                 }
                 is UIState.Error -> {
                     listPostAdapter.clearData()
+                    Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+        postViewModel.refreshPostInfoLiveData().observe(this, Observer { status ->
+            hideLoading()
+            when (status) {
+                is UIState.Loading -> {
+                    showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
+                }
+                is UIState.Success -> {
+                    val data = status.data as MutableList<PostBind>
+                    listPostAdapter.clearData()
+                    listPostAdapter.setData(data)
+                }
+                is UIState.Error -> {
+                    listPostAdapter.clearData()
+                    Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+        postViewModel.isReadPostInfoLiveData().observe(this, Observer {status ->
+            hideLoading()
+            when (status) {
+                is UIState.Loading -> {
+                    showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
+                }
+                is UIState.Success -> {
+                    Log.d("Status","--Updated correctly")
+                }
+                is UIState.Error -> {
+                    Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+        postViewModel.isFavoritePostInfoLiveData().observe(this, Observer {status ->
+            hideLoading()
+            when (status) {
+                is UIState.Loading -> {
+                    showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
+                }
+                is UIState.Success -> {
+                    Log.d("Status","--Changed correctly")
+                }
+                is UIState.Error -> {
                     Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
                 }
             }
@@ -73,7 +118,7 @@ class PostFragment : Fragment(), Loading {
                     showLoading(getString(R.string.title_loading_dialog), fragmentManager!!)
                 }
                 is UIState.Success -> {
-                    postViewModel.getPosts()
+                    getPost()
                 }
                 is UIState.Error -> {
                     Toast.makeText(context, status.message, Toast.LENGTH_LONG).show()
@@ -118,7 +163,7 @@ class PostFragment : Fragment(), Loading {
                 showPostsFavorites()
                 false
             }
-            R.id.refreshItem ->{
+            R.id.refreshItem -> {
                 refreshPost()
                 false
             }
@@ -138,11 +183,11 @@ class PostFragment : Fragment(), Loading {
     }
 
     private fun setupListPostsAdapter() {
-        listPostAdapter = ListPostAdapter(clickPost = {idPost,idUser ->
+        listPostAdapter = ListPostAdapter(clickPost = {idPost,idUser, isRead ->
             launchActivityUser(idUser)
-            updateItemRead(idPost)
-        }, changePostFav = { _, _ ->
-            updateChangeFavorite()
+            updateItemRead(idPost, isRead)
+        }, changePostFav = { isPost, isFavorite ->
+            updateChangeFavorite(isPost, isFavorite)
         }, deletePost = {idPost ->
             launchBottomSheetDelete(idPost)
         })
@@ -165,15 +210,15 @@ class PostFragment : Fragment(), Loading {
     }
 
     private fun refreshPost() {
-        Toast.makeText(context!!,"Refresh", Toast.LENGTH_SHORT).show()
+        postViewModel.getRefreshPost()
     }
 
-    private fun updateItemRead(idPost : Int) {
-        postViewModel.readPostDB(idPost)
+    private fun updateItemRead(idPost : Int, isRead: Boolean) {
+        postViewModel.readPostDB(idPost, isRead)
     }
 
-    private fun updateChangeFavorite() {
-        Toast.makeText(context!!,"Action change favorite", Toast.LENGTH_SHORT).show()
+    private fun updateChangeFavorite(idPost: Int, isFavorite: Boolean) {
+        postViewModel.isFavoritePostDB(idPost, isFavorite)
     }
 
     private fun getPost() {
@@ -184,7 +229,7 @@ class PostFragment : Fragment(), Loading {
         val bundle = Bundle()
         bundle.putInt("idPost", idPost)
         bottomSheetDelete.arguments = bundle
-        bottomSheetDelete.show(activity!!.supportFragmentManager, BottomSheetFragment.TAG)
+        bottomSheetDelete.show(activity!!.supportFragmentManager, BottomSheetDialog.TAG)
     }
 
     private fun listenerDeletePost() {

@@ -11,24 +11,24 @@ import io.reactivex.Completable
 interface PostDao {
 
     @Query("SELECT * FROM post")
-    fun getPosts(): List<PostDB>
+    fun getPostsDB(): List<PostDB>
 
     @Query("SELECT * FROM post WHERE isFavorite = 1")
-    fun getPostsFav(): List<PostDB>
+    fun getPostsFavDB(): List<PostDB>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(posts: List<PostDB>)
+    fun insertAllDB(posts: List<PostDB>)
 
     @Query("DELETE FROM post")
-    fun deleteAllPost(): Completable
+    fun deleteAllPostDB(): Completable
 
     @Query("DELETE FROM post WHERE id = :id")
-    fun deletePost(id: Int): Completable
+    fun deletePostDB(id: Int): Completable
 
-    @Query("UPDATE post SET isRead = 1 WHERE id = :id")
-    fun readPostDB(id: Int)
+    @Query("UPDATE post SET isRead = :isRead WHERE id = :id")
+    fun readPostDB(id: Int, isRead: Int): Completable
 
-/*    @Query("UPDATE post SET isFavorite = isFavorite WHERE id = :id")
-    fun updateFavPost(id: Int, isFavorite: Int)*/
+    @Query("UPDATE post SET isFavorite = :isFavorite WHERE id = :id")
+    fun isFavoritePostDB(id: Int, isFavorite: Int): Completable
 
 }

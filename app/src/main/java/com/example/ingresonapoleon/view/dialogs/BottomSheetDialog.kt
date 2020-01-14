@@ -8,7 +8,7 @@ import com.example.ingresonapoleon.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_delete_post.*
 
-class BottomSheetFragment: BottomSheetDialogFragment() {
+class BottomSheetDialog: BottomSheetDialogFragment() {
 
     internal var listener: (Int) -> Unit = {}
     private val idPost = 0
@@ -33,6 +33,6 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "BottomSheetFragment"
+        const val TAG = "BottomSheetDialog"
     }
 }
