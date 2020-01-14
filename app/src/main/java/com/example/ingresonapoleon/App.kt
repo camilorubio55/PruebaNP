@@ -2,10 +2,12 @@ package com.example.ingresonapoleon
 
 import android.app.Application
 import androidx.room.Room
+import com.example.ingresonapoleon.model.FavoritePostsRepository
 import com.example.ingresonapoleon.model.PostRepository
 import com.example.ingresonapoleon.model.UserRepository
 import com.example.ingresonapoleon.model.db.AppDatabase
 import com.example.ingresonapoleon.services.Connection
+import com.example.ingresonapoleon.viewmodel.FavoritePostsViewModel
 import com.example.ingresonapoleon.viewmodel.PostViewModel
 import com.example.ingresonapoleon.viewmodel.UserViewModel
 import okhttp3.OkHttpClient
@@ -31,9 +33,14 @@ class App: Application() {
         private lateinit var postViewModel: PostViewModel
         private lateinit var postRepository: PostRepository
 
+        // Favorite Posts
+        private lateinit var favoritePostsViewModel: FavoritePostsViewModel
+        private lateinit var favoritePostRepository: FavoritePostsRepository
+
         // Injection
         fun injectUserViewModel() = userViewModel
         fun injectPostViewModel() = postViewModel
+        fun injectFavoritePostsViewModel() = favoritePostsViewModel
         fun injectPostDao() = appDatabase.postDao()
     }
 
@@ -61,5 +68,9 @@ class App: Application() {
         // Posts
         postRepository = PostRepository(connection, injectPostDao())
         postViewModel = PostViewModel(postRepository)
+
+        // Favorite Posts
+        favoritePostRepository = FavoritePostsRepository(injectPostDao())
+        favoritePostsViewModel = FavoritePostsViewModel(favoritePostRepository)
     }
 }
